@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - DepotBox API</title>
+    <link rel="icon" type="image/png" href="/icon.png">
+    <style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        :root {
+            --bg-dark: #0f0f12; --bg-container: #1a1a1f; --bg-element: #2c2c34; --border-color: #383842;
+            --text-primary: #e8e8e8; --text-secondary: #a0a0b0; --accent-primary: #bb86fc;
+            --accent-secondary: #A166F0; --accent-green: #78e08f; --accent-red: #ff7675;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0; background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 1px 1px, rgba(200,200,200,0.05) 1px, transparent 0);
+            background-size: 20px 20px; color: var(--text-primary); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; min-height: 100vh; padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 100%; max-width: 450px; background-color: var(--bg-container); padding: 35px 45px;
+            border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);
+            animation: fadeIn 0.6s ease-out; border: 1px solid var(--border-color);
+        }
+        h1 {
+            text-align: center; font-size: 2.2em; margin-bottom: 30px; font-weight: 700; color: var(--accent-primary);
+        }
+        label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-secondary); font-size: 0.95em; }
+        .input-group { margin-bottom: 20px; }
+        input[type="text"], input[type="password"] {
+            width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 8px;
+            background-color: var(--bg-element); color: var(--text-primary); font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; box-sizing: border-box;
+        }
+        input[type="text"]::placeholder, input[type="password"]::placeholder { color: var(--text-secondary); opacity: 0.7; }
+        input[type="text"]:focus, input[type="password"]:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 0 3px rgba(187,134,252,0.15); }
+        button {
+            background-image: linear-gradient(120deg, var(--accent-secondary), var(--accent-primary)); color: white;
+            padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 1.0em; font-weight: 600;
+            transition: transform 0.2s cubic-bezier(0.25,0.1,0.25,1), box-shadow 0.3s ease, opacity 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); width: 100%;
+        }
+        button:hover:not(:disabled) { transform: translateY(-2px) scale(1.01); box-shadow: 0 6px 20px rgba(187,134,252,0.2); }
+        button:active:not(:disabled) { transform: translateY(-1px) scale(0.99); box-shadow: 0 3px 10px rgba(187,134,252,0.15); }
+        button:disabled { background-image: none; background-color: #404048; cursor: not-allowed; opacity: 0.5; box-shadow: none; }
+        .cf-turnstile { margin: 20px auto; display: flex; justify-content: center; min-height: 70px; }
+        .error-message { color: var(--accent-red); background-color: rgba(255,118,117,0.1); border: 1px solid var(--accent-red); padding: 10px 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
+        .success-message { color: var(--accent-green); background-color: rgba(120,224,143,0.1); border: 1px solid var(--accent-green); padding: 10px 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
+        .form-footer { text-align: center; margin-top: 25px; font-size: 0.9em; color: var(--text-secondary); }
+        .form-footer a { color: var(--accent-primary); text-decoration: none; font-weight: 500; }
+        .form-footer a:hover { text-decoration: underline; }
+        .forgot-password-link {
+            display: block;
+            text-align: right;
+            margin-top: -10px;
+            margin-bottom: 20px;
+            font-size: 0.85em;
+        }
+        .forgot-password-link a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .forgot-password-link a:hover {
+            color: var(--accent-primary);
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-sign-in-alt"></i> Login to DepotBox</h1>
+
+        
+        
+        
+
+        <form action="/POST.php" method="POST">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Your username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Your password" required>
+            </div>
+            <div class="forgot-password-link">
+                <a href="/forgot-password">Forgot password?</a>
+            </div>
+            <input type="hidden" name="next" value="">
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAABfsvubdNIT8JPA3" data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired" data-error-callback="onTurnstileError" data-theme="dark"></div>
+            <input type="hidden" name="turnstileToken" id="turnstileToken">
+            <button type="submit" id="loginButton"><i class="fas fa-sign-in-alt"></i> Login</button>
+        </form>
+
+        <div class="form-footer">
+            Don't have an account? <a href="/register">Register now</a>
+        </div>
+    </div>
+
+    <script>
+        const loginButton = document.getElementById('loginButton');
+        const turnstileTokenInput = document.getElementById('turnstileToken');
+
+        function onTurnstileSuccess(token) {
+            turnstileTokenInput.value = token;
+            loginButton.disabled = false;
+        }
+
+        function onTurnstileExpired() {
+            turnstileTokenInput.value = '';
+            loginButton.disabled = false;
+            console.log("CAPTCHA expired.");
+        }
+
+        function onTurnstileError(errorCode) {
+            turnstileTokenInput.value = '';
+            loginButton.disabled = false;
+            console.error("CAPTCHA error:", errorCode);
+            alert(`CAPTCHA error: ${errorCode || 'Unknown'}. Please try again.`);
+        }
+
+        loginButton.disabled = false;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('reset')) {
+        }
+    </script>
+<script type="module" src="/POST.php" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"dbb830ec378f4becadd21ee6aacbccdf","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
